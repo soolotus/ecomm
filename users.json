@@ -8,5 +8,15 @@
     "email": "soolotus632@gmail.com",
     "password": "1234",
     "id": "cd89c8ba"
+  },
+  {
+    "email": "test@test.com",
+    "password": "1234",
+    "id": "da427143"
+  },
+  {
+    "email": "test1@test.com",
+    "password": "75011ff8f2b6ac9a21842cd09553aeed4983cc8f4e450b5f11e6dc43aa01d9d712d0b8189136c4f09230bfbe65ee2c9b5bea4617cfca92afa7d1e24b7df8574f.2d1c3c5bbff4a93b",
+    "id": "b40df767"
   }
 ]
