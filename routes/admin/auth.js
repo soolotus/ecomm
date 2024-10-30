@@ -1,10 +1,16 @@
 const express = require("express");
+const { check, validationResult } = require("express-validator");
 
 const usersRepo = require("../../repositories/users");
 
 const router = express.Router();
 const signupTemplate = require("../../views/admin/auth/signup");
 const signinTemplate = require("../../views/admin/auth/signin");
+const {
+  requireEmail,
+  requirePassword,
+  requirePasswordConfirmation,
+} = require("./validators");
 
 router.get("/signup", (req, res) => {
   res.send(signupTemplate({ req }));
@@ -27,24 +33,25 @@ router.get("/signup", (req, res) => {
 //   }
 // };
 
-router.post("/signup", async (req, res) => {
-  //  get access to email, password, passwordConfirmation
-  const { email, password, passwordConfirmation } = req.body;
-  const existingUser = await usersRepo.getOneBy({ email });
-  if (existingUser) {
-    return res.send("Email in use");
-  }
-  if (password !== passwordConfirmation) {
-    return res.send("Passwords must match");
-  }
-  // Create a user in our user repo to represent this person
-  const user = await usersRepo.create({ email, password });
+router.post(
+  "/signup",
+  [requireEmail, requirePassword, requirePasswordConfirmation],
+  async (req, res) => {
+    const errors = validationResult(req);
+    console.log(errors);
 
-  // Store the id of that user inside the users cookie
-  req.session.userId = user.id;
+    //  get access to email, password, passwordConfirmation
+    const { email, password, passwordConfirmation } = req.body;
 
-  res.send("Account created");
-});
+    // Create a user in our user repo to represent this person
+    const user = await usersRepo.create({ email, password });
+
+    // Store the id of that user inside the users cookie
+    req.session.userId = user.id;
+
+    res.send("Account created");
+  }
+);
 
 router.get("/signout", (req, res) => {
   req.session = null;
